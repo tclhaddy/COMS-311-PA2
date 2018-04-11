@@ -43,10 +43,13 @@ public class NetworkInfluence
 
 	public int distance(ArrayList<String> s, String v)
 	{
-		// implementation
-
-		// replace this:
-		return -1;
+		int min=distance(s.get(0),v);
+		for(int i=1;i<s.size();i++){
+			int curr=distance(s.get(i),v);
+			if(curr<min)
+				min=curr;
+		}
+		return min;
 	}
 
 	public float influence(String u)
