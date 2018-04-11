@@ -15,6 +15,7 @@ public class NetworkInfluence
 	public NetworkInfluence(String graphData)
 	{
 		// implementation
+		//I suck at coding
 	}
 
 	public int outDegree(String v)
