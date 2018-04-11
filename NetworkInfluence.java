@@ -42,14 +42,6 @@ public class NetworkInfluence
 		return -1;
 	}
 
-	public int distance(ArrayList<String> s, String v)
-	{
-		int min=distance(s.get(0),v);
-		for(int i=1;i<s.size();i++){
-			int curr=distance(s.get(i),v);
-			if(curr<min)
-				min=curr;
-
 	public int distance(ArrayList<String> s, String v)     // Goes through every String in s
 	{                                                      // to find and return the shortest distance
 		int min;
