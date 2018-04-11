@@ -14,6 +14,7 @@ public class WikiCrawler {
 		topics = t;
 		fileName = f;
 	}
+	//eyy
 	public void crawl() throws InterruptedException, IOException{
 		PriorityQueue<String> toVisit = new PriorityQueue<String>();
 		HashSet<String> visited = new HashSet<String>();
