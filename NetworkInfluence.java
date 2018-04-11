@@ -47,8 +47,9 @@ public class NetworkInfluence
 		min = distance(s.get(0),v);
 		for(int i=1;i<s.size();i++){
 			int nw=distance(s.get(i),v);
-			if(nw < min)
+			if(nw < min){
 				min = nw;
+			}
 		}
 		return min;
 	}
