@@ -4,18 +4,38 @@ import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
 
 public class WikiCrawler {
-	static final String BASE_URL = "https://en.wikipedia.org";
-	String seedURL;
-	int max;
-	ArrayList<String> topics;
-	String fileName;
-	public WikiCrawler(String s, int m, ArrayList<String> t, String f){
+	
+	//private static final String BASE_URL = "http://web.cs.iastate.edu/~pavan";
+	private static final String BASE_URL = "https://en.wikipedia.org";
+	private String seedURL;
+	private int max;
+	private ArrayList<String> topics;
+	private String fileName;
+	
+	public WikiCrawler(String s, int m, ArrayList<String> t, String f) {
 		seedURL = s;
 		max = m;
 		topics = t;
 		fileName = f;
 	}
-	public void crawl() throws InterruptedException, IOException{
+	
+	public String getSeedURL() {
+		return seedURL;
+	}
+	
+	public int getMax() {
+		return max;
+	}
+	
+	public ArrayList<String> getTopics() {
+		return topics;
+	}
+	
+	public String getFileName() {
+		return fileName;
+	}
+	
+	public void crawl() throws InterruptedException, IOException {
 		PrintWriter writer = new PrintWriter(fileName,"UTF-8");
 		writer.println(max);
 		Queue<SimpleEntry<String,String>> toVisit = new LinkedList<SimpleEntry<String,String>>();
@@ -39,7 +59,8 @@ public class WikiCrawler {
 						for(int i=6; i<curWord.length()-1; i++){
 							nextURL+= curWord.charAt(i);
 						}
-						System.out.println(nextURL);
+						//Uncomment line below if you want to see the nextURL's for BFS
+						//System.out.println(nextURL);
 						if(!nextURL.contains(":")&&!nextURL.contains("#"))toVisit.add(new SimpleEntry<String,String>(toAndFrom.getValue(),nextURL));
 					}
 				}
@@ -51,10 +72,5 @@ public class WikiCrawler {
 			}
 		}
 		writer.close();
-	}
-	public static void main(String[] args) throws InterruptedException, IOException{
-		ArrayList<String> topics = new ArrayList<String>();
-		WikiCrawler w = new WikiCrawler("/wiki/Iowa_State_University",100,topics,"WikiISU.txt");
-		w.crawl();
 	}
 }
