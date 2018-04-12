@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.AbstractMap.SimpleEntry;
 
 public class WikiCrawler {
 	static final String BASE_URL = "https://en.wikipedia.org";
@@ -14,29 +15,42 @@ public class WikiCrawler {
 		topics = t;
 		fileName = f;
 	}
-	//eyy
 	public void crawl() throws InterruptedException, IOException{
-		PriorityQueue<String> toVisit = new PriorityQueue<String>();
+		PrintWriter writer = new PrintWriter(fileName,"UTF-8");
+		writer.println(max);
+		Queue<SimpleEntry<String,String>> toVisit = new LinkedList<SimpleEntry<String,String>>();
 		HashSet<String> visited = new HashSet<String>();
 		int counter = 0;
-		toVisit.add(seedURL);
+		toVisit.add(new SimpleEntry<String,String>("",seedURL));
 		while(!toVisit.isEmpty()&&visited.size()<=max){
-			String curStr = BASE_URL+toVisit.poll();
+			SimpleEntry<String,String> toAndFrom = toVisit.poll();
+			String curStr = BASE_URL+toAndFrom.getValue();
 			if(!visited.contains(curStr)){
 				visited.add(curStr);
 				URL curURL = new URL(curStr);
 				InputStream is = curURL.openStream();
 				Scanner scanner = new Scanner(is);
 				HashSet<String> allTextWords = new HashSet<String>();
-				while(scanner.hasNextLine()){
-					System.out.println(scanner.nextLine()+counter);
+				while(scanner.hasNext()){
+					String curWord = scanner.next();
+					//System.out.println(curWord);
+					if(curWord.length()>12&&curWord.substring(0,12).equals("href=\"/wiki/")){
+						String nextURL = "";
+						for(int i=6; i<curWord.length()-1; i++){
+							nextURL+= curWord.charAt(i);
+						}
+						System.out.println(nextURL);
+						if(!nextURL.contains(":")&&!nextURL.contains("#"))toVisit.add(new SimpleEntry<String,String>(toAndFrom.getValue(),nextURL));
+					}
 				}
+				if(!toAndFrom.getKey().equals("")) writer.println(toAndFrom.getKey() + " " + toAndFrom.getValue());
 				scanner.close();
 				is.close();
 				counter++;
 				if(counter%25==0) Thread.sleep(3000);
 			}
 		}
+		writer.close();
 	}
 	public static void main(String[] args) throws InterruptedException, IOException{
 		ArrayList<String> topics = new ArrayList<String>();
