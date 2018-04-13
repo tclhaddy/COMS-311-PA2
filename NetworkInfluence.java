@@ -74,18 +74,86 @@ public class NetworkInfluence
 
 	public int outDegree(String v)
 	{
-		// implementation
-
-		// replace this:
-		return -1;
+		int total = 0;
+		
+		//Goes through each vertice in adjList
+		for(int i=0;i<adjList.length;i++){
+			
+			//If the first word is the same as the vertice, add 1 to total
+			if(adjList[i].get(0).equals(v))
+				total++;
+		}
+		
+		//Send back the total -> the number of times v is the first word in adjList
+		return total;
 	}
 
 	public ArrayList<String> shortestPath(String u, String v)
 	{
-		// implementation
-
-		// replace this:
-		return null;
+		ArrayList<String> visited;
+		ArrayList<String> result;
+		
+		result = shortestPathHelper(u, v, visited);
+		
+		ArrayList<String> result2;
+		
+		for(int i=result.size()-1;i>=0;i--)
+			result2.add(result.get(i));
+		
+		return result2;
+	}
+	
+	
+	// Helper Method to find shortest path
+	public ArrayList<String> shortestPathHelper(String from, String to, ArrayList<String> visited){
+		ArrayList<String> out;
+		visited.add(from);
+		
+		//Goes through the adjList to find all connected vertices
+		for(int i=0;i<adjList.length;i++){
+			if(adjList[i].get(0).equals(from)){
+				visited = false;
+				
+				//Checks if the found edge has already been visited
+				for(int j=0;j<visited.size();j++){
+					if(adjList[i].get(1)==visited.get(j)){
+						visited = true;
+						break;
+					}
+				}
+				if(visited == false){
+					out.add(adjList[i].get(1));
+				}
+			}
+		}
+		
+		ArrayList<String> shortArr;
+		if(out.size() == 0)
+			return shortArr;
+		
+		for(int n=0;n<out.size();n++){
+			if(out.equals(to)){
+				shortArr.add(to);
+				shortArr.add(from);
+				return shortArr;
+			}
+		}
+		
+		shortArr = shortestPathHelper(out.get(0), to, visited);
+		for(int m=1;m<out.size();m++){
+			ArrayList<String> arr2 = shortestPathHelper(out.get(m),to,visited);
+			boolean contain = false;
+			for(int z=0;z<arr2.size();z++){
+				if(arr2.get(z).equals(to))
+					contain = true;
+			}
+			if((arr2.size() < shortArr.size())&&(contain == true)){
+				shortArr = arr2;
+			}
+		}
+		
+		shortArr.add(from);
+		return shortArr;
 	}
 
 	public int distance(String u, String v)
