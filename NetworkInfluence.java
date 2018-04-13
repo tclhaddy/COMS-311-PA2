@@ -158,10 +158,9 @@ public class NetworkInfluence
 
 	public int distance(String u, String v)
 	{
-		// implementation:
-
-		// replace this:
-		return -1;
+		ArrayList<String> shortestPath;
+		shortestPath = shortestPath(u,v);
+		return shortestPath.size();
 	}
 
 	public int distance(ArrayList<String> s, String v)     // Goes through every String in s
