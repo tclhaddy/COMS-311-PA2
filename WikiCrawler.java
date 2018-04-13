@@ -40,7 +40,6 @@ public class WikiCrawler {
 		writer.println(max);
 		Queue<SimpleEntry<String,String>> toVisit = new LinkedList<SimpleEntry<String,String>>();
 		HashSet<String> visited = new HashSet<String>();
-		HashSet<String> haveAllTopics = new HashSet<String>();
 		int pagesWithTopics = 0;
 		int counter = 0;
 		toVisit.add(new SimpleEntry<String,String>("",seedURL));
@@ -49,17 +48,17 @@ public class WikiCrawler {
 			String curURL = toAndFrom.getValue();
 			ArrayList<String> tempTopics = new ArrayList<String>();
 			tempTopics.addAll(topics);
-			if(!visited.contains(curURL)&&(haveAllTopics.contains(toAndFrom.getKey())||curURL.equals(seedURL))){
-				visited.add(curURL);
+			if(!visited.contains(curURL)){
 				Scanner scanner = new Scanner((new URL(BASE_URL+curURL)).openStream());
 				boolean currentlyInPTag = false;
+				LinkedList<SimpleEntry<String,String>> allNextURLs = new LinkedList<SimpleEntry<String,String>>();
+				visited.add(curURL);
 				while(scanner.hasNextLine()){
 					String curLine = scanner.nextLine();
-					//System.out.println(curLine);
 					if(curLine.contains("<p>")) currentlyInPTag = true;
-					if(currentlyInPTag){
-						for(int i=topics.size()-1; i>0; i--){
-							if(curLine.contains(topics.get(i))) tempTopics.remove(i);
+					if(currentlyInPTag&&!tempTopics.isEmpty()){
+						for(int i=0; i<tempTopics.size(); i++){
+							if(curLine.contains(tempTopics.get(i))) tempTopics.remove(i);
 						}
 					}
 					if(curLine.contains("href=\"/wiki/")){
@@ -69,15 +68,14 @@ public class WikiCrawler {
 							nextURL+= curLine.charAt(startOfLink);
 							startOfLink++;
 						}
-						//Uncomment line below if you want to see the nextURL's for BFS
-						System.out.println(nextURL);
-						if(!nextURL.contains(":")&&!nextURL.contains("#"))toVisit.add(new SimpleEntry<String,String>(toAndFrom.getValue(),nextURL));
+						//System.out.println(nextURL);
+						if(!nextURL.contains(":")&&!nextURL.contains("#"))allNextURLs.add(new SimpleEntry<String,String>(toAndFrom.getValue(),nextURL));
 					}
 					if(curLine.contains("<\\p>")) currentlyInPTag = false;
 				}
 				boolean thisPageHasAllTopics = tempTopics.isEmpty();
 				if(thisPageHasAllTopics){
-					haveAllTopics.add(curURL);
+					toVisit.addAll(allNextURLs);
 					pagesWithTopics++;
 					if(!toAndFrom.getKey().equals("")) writer.println(toAndFrom.getKey() + " " + toAndFrom.getValue());
 				}
@@ -87,12 +85,5 @@ public class WikiCrawler {
 			}
 		}
 		writer.close();
-	}
-	public static void main(String[] args) throws InterruptedException, IOException{
-		ArrayList<String> topics = new ArrayList<String>();
-		topics.add("Iowa State");
-		topics.add("Cyclones");
-		WikiCrawler w = new WikiCrawler("/wiki/Iowa_State_University",100,topics,"WikiISU.txt");
-		w.crawl();
 	}
 }
