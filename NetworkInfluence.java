@@ -90,12 +90,12 @@ public class NetworkInfluence
 
 	public ArrayList<String> shortestPath(String u, String v)
 	{
-		ArrayList<String> visited;
+		ArrayList<String> visited = new ArrayList<String>();
 		ArrayList<String> result;
 		
 		result = shortestPathHelper(u, v, visited);
 		
-		ArrayList<String> result2;
+		ArrayList<String> result2 = new ArrayList<String>();
 		
 		for(int i=result.size()-1;i>=0;i--)
 			result2.add(result.get(i));
@@ -106,28 +106,28 @@ public class NetworkInfluence
 	
 	// Helper Method to find shortest path
 	public ArrayList<String> shortestPathHelper(String from, String to, ArrayList<String> visited){
-		ArrayList<String> out;
+		ArrayList<String> out = new ArrayList<String>();
 		visited.add(from);
 		
 		//Goes through the adjList to find all connected vertices
 		for(int i=0;i<adjList.length;i++){
 			if(adjList[i].get(0).equals(from)){
-				visited = false;
+				boolean hasVisited = false;
 				
 				//Checks if the found edge has already been visited
 				for(int j=0;j<visited.size();j++){
 					if(adjList[i].get(1)==visited.get(j)){
-						visited = true;
+						hasVisited = true;
 						break;
 					}
 				}
-				if(visited == false){
+				if(hasVisited == false){
 					out.add(adjList[i].get(1));
 				}
 			}
 		}
 		
-		ArrayList<String> shortArr;
+		ArrayList<String> shortArr = new ArrayList<String>();
 		if(out.size() == 0)
 			return shortArr;
 		
