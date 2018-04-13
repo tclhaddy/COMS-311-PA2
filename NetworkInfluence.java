@@ -7,15 +7,69 @@
 // DO NOT INCLUDE LIBRARIES OUTSIDE OF THE JAVA STANDARD LIBRARY
 //  (i.e., you may only include libraries of the form java.*)
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
 
 public class NetworkInfluence
 {
-	// NOTE: graphData is an absolute file path that contains graph data, NOT the raw graph data itself
+	private String filepath;
+	private LinkedList<String> adjList[];
+	
 	public NetworkInfluence(String graphData)
 	{
-		// implementation
-		//I suck at coding
+		filepath = graphData;
+		try {
+			adjList = makeAdjList();
+		} catch (FileNotFoundException e) {
+			System.out.println("Filepath was not found");
+		}
+	}
+	
+	private LinkedList<String>[] makeAdjList() throws FileNotFoundException {
+		
+		File file = new File(filepath);
+		Scanner scan = new Scanner(file);
+		
+		int vertices = 0;
+		String line;
+		line = scan.nextLine();
+		try {
+			vertices = Integer.parseInt(line);
+		} catch (NumberFormatException e) {
+			System.out.println("File did not have the number of vertices on the first line");
+		}
+		
+		LinkedList<String> result[] = new LinkedList[vertices];
+		for (int i = 0; i < result.length; ++i) {
+            result[i] = new LinkedList<>();
+        }
+		
+		int pos = 0;
+		while (scan.hasNextLine()) {
+			line = scan.nextLine();
+			Scanner s = new Scanner(line);
+			while (s.hasNext()) {
+				String word = s.next();
+				for (int i = 0; i < result.length; i++) {
+					
+					//First word exists already as a vertex, add second word as an edge
+					if (word.equals(result[i].get(0))) {
+						word = s.next();
+						result[i].addFirst(word);
+					}
+				}
+				
+				//Otherwise there is no vertex for the first word, make one
+				result[pos].addFirst(word);
+				pos++;
+			}
+			
+			pos++;
+			s.close();
+		}
+		scan.close();
+		return result;
 	}
 
 	public int outDegree(String v)
