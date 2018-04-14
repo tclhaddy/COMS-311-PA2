@@ -25,7 +25,7 @@ public class NetworkInfluence
 			adjList = makeAdjList(graphData);
 		}
 		
-		private LinkedList<String>[] makeAdjList(String path) throws FileNotFoundException {
+		private LinkedList<String>[] makeAdjList(String path) throws FileNotFoundException, NumberFormatException {
 			
 			File file = new File(path);
 			Scanner scan = new Scanner(file);
@@ -33,44 +33,63 @@ public class NetworkInfluence
 			int vertices = 0;
 			String line;
 			line = scan.nextLine();
-			try {
-				vertices = Integer.parseInt(line);
-			} catch (NumberFormatException e) {
-				System.out.println("File did not have the number of vertices on the first line");
-			}
+			vertices = Integer.parseInt(line);
 			
 			LinkedList<String> result[] = new LinkedList[vertices];
-			for (int i = 0; i < result.length; ++i) {
+			for (int i = 0; i < vertices; ++i) {
 	            result[i] = new LinkedList<>();
 	        }
 			
-			int pos = 0;
 			while (scan.hasNextLine()) {
 				line = scan.nextLine();
 				Scanner s = new Scanner(line);
 				while (s.hasNext()) {
-					String word = s.next();
-					for (int i = 0; i < result.length; i++) {
-						
-						//First word exists already as a vertex, add second word as an edge
-						if (word.equals(result[i].get(0))) {
-							word = s.next();
-							result[i].addFirst(word);
-						}
-					}
-					
-					//Otherwise there is no vertex for the first word, make one
-					result[pos].addFirst(word);
-					pos++;
-				}
-				
-				pos++;
+					String v = s.next();
+					String e = s.next();
+					addEdge(result, v, e);
+				}	
 				s.close();
 			}
 			scan.close();
 			return result;
 		}
-	}
+		
+		private void addEdge(LinkedList<String> adjacencyList[], String vertex, String toAdd) {
+	        boolean added = false;
+	        int pos = 0;
+			while (!adjacencyList[pos].isEmpty() && !added) {
+	        	if (vertex.equals(adjacencyList[pos].get(0))) {
+	        		adjacencyList[pos].addLast(toAdd);
+	        		added = true;
+	        	}
+	        	else {
+	        		pos++;
+	        	}
+	        }
+			
+			//No vertex found, toAdd becomes a vertex
+			if (!added) {
+				adjacencyList[pos].addFirst(vertex);
+				adjacencyList[pos].add(toAdd);
+			}
+	    }
+		
+		private String toStr() {
+			String result = "";
+			for (int i = 0; i < adjList.length; i++) {
+				for (int j = 0; j < adjList[i].size(); j++) {
+					if (j == 0)
+						result += "Vertex: [" + adjList[i].get(j) + "]--> "; 
+					else if (j == adjList[i].size()-1)
+						result += "[" + adjList[i].get(j) + "]";
+					else
+						result += "[" + adjList[i].get(j) + "]--> ";
+				}
+				result += "\n";
+			}
+			return result;
+		}
+	} //End Graph class
 	
 	private String filepath;
 	private Graph graph;
@@ -226,5 +245,11 @@ public class NetworkInfluence
 
 		// replace this:
 		return null;
+	}
+	
+	//Delete this later
+	public static void main(String[] args) {
+		NetworkInfluence nw = new NetworkInfluence("C:\\Users\\Thomas\\Desktop\\test.txt");
+		System.out.println(nw.graph.toStr());
 	}
 }
