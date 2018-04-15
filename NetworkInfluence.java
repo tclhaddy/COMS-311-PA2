@@ -10,6 +10,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.AbstractMap.SimpleEntry;
 
 public class NetworkInfluence
 {
@@ -20,8 +21,10 @@ public class NetworkInfluence
 	private class Graph {
 		
 		private LinkedList<String> adjList[];
+		private HashMap<String,Integer> getLoc;
 		
 		private Graph(String graphData) throws FileNotFoundException {
+			getLoc = new HashMap<String,Integer>();
 			adjList = makeAdjList(graphData);
 		}
 		
@@ -40,13 +43,14 @@ public class NetworkInfluence
 	            result[i] = new LinkedList<>();
 	        }
 			
+			int nextEmpty = 0;
 			while (scan.hasNextLine()) {
 				line = scan.nextLine();
 				Scanner s = new Scanner(line);
 				while (s.hasNext()) {
 					String v = s.next();
 					String e = s.next();
-					addEdge(result, v, e);
+					nextEmpty = addEdge(result, v, e, nextEmpty);
 				}	
 				s.close();
 			}
@@ -54,8 +58,8 @@ public class NetworkInfluence
 			return result;
 		}
 		
-		private void addEdge(LinkedList<String> adjacencyList[], String vertex, String toAdd) {
-	        boolean added = false;
+		private int addEdge(LinkedList<String> adjacencyList[], String vertex, String toAdd, int nextEmpty) {
+	        /*boolean added = false;
 	        int pos = 0;
 			while (!adjacencyList[pos].isEmpty() && !added) {
 	        	if (vertex.equals(adjacencyList[pos].get(0))) {
@@ -71,7 +75,13 @@ public class NetworkInfluence
 			if (!added) {
 				adjacencyList[pos].addFirst(vertex);
 				adjacencyList[pos].add(toAdd);
+			}*/
+			if(!getLoc.containsKey(vertex)){
+				getLoc.put(vertex,nextEmpty);
+				nextEmpty++;
 			}
+			adjList[getLoc.get(vertex)].add(toAdd);
+			return nextEmpty;
 	    }
 		
 		private String toStr() {
@@ -209,10 +219,24 @@ public class NetworkInfluence
 
 	public float influence(String u)
 	{
-		// implementation
-
-		// replace this:
-		return -1f;
+		float total = 0;
+		HashSet<String> visited = new HashSet<String>();
+		Queue<SimpleEntry<String,Integer>> toVisit = new LinkedList<SimpleEntry<String,Integer>>();
+		toVisit.add(new SimpleEntry<String,Integer>(u,0));
+		while(!toVisit.isEmpty()){
+			SimpleEntry<String,Integer> curNode = toVisit.poll();
+			if(!visited.contains(curNode.getKey())){
+				if(curNode.getValue()!=0){
+					total+=1/(Math.pow(2,curNode.getValue()));
+				}
+				visited.add(curNode.getKey());
+				ListIterator<String> curList = graph.adjList[graph.getLoc.get(curNode.getKey())].listIterator();
+				while(curList.hasNext()){
+					toVisit.add(new SimpleEntry<String,Integer>(curList.next(),curNode.getValue()+1));
+				}
+			}
+		}
+		return total;
 	}
 
 	public float influence(ArrayList<String> s)
