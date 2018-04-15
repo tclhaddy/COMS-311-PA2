@@ -18,7 +18,7 @@ public class NetworkInfluence
 	 *  Private class that represents a graph to be used by NetworkInfluence
 	 */
 	private class Graph {
-		
+
 		private LinkedList<String> adjList[];
 		
 		private Graph(String graphData) throws FileNotFoundException {
