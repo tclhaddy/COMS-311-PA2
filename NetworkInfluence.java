@@ -241,6 +241,8 @@ public class NetworkInfluence
 
 	public float influence(ArrayList<String> s)
 	{
+		float total = 0;
+		
 		// implementation
 
 		// replace this:
@@ -249,10 +251,53 @@ public class NetworkInfluence
 
 	public ArrayList<String> mostInfluentialDegree(int k)
 	{
-		// implementation
-
-		// replace this:
-		return null;
+		ArrayList<String> all_nodes = new ArrayList<String>();
+		for(int i=0;i<graph.adjList.length;i++){
+			boolean visited_one = false;
+			boolean visited_two = false;
+			for(int j=0;j<all_nodes.size();j++){
+				if(graph.adjList[i].get(0).equals(all_nodes.get(j)))
+					visited_one = true;
+				if(graph.adjList[i].get(1).equals(all_nodes.get(j)))
+					visited_two = true;
+			}
+			if(!visited_one)
+				all_nodes.add(graph.adjList[i].get(0));
+			if(!visited_two)
+				all_nodes.add(graph.adjList[i].get(1));
+		}
+		
+		String[] most_influencial = new String[k];
+		float[] influencial_val = new float[k];
+		int index = 0;
+		for(int i=0;i<all_nodes.size();i++){
+			float a = influence(all_nodes.get(i));
+			if(index < k){
+				most_influencial[index] = all_nodes.get(i);
+				influencial_val[index] = a;
+				index++;
+			}else{
+				float min = influencial_val[0];
+				int ind = 0;
+				for(int j=1;j<influencial_val.length;j++){
+					if(influencial_val[j]<min){
+						min = influencial_val[j];
+						ind = j;
+					}
+				}
+				if(a > min){
+					influencial_val[ind] = a;
+					most_influencial[ind] = all_nodes.get(i);
+				}
+			}
+		}
+		
+		ArrayList<String> influence = new ArrayList<String>();
+		for(int n=0;n<most_influencial.length;n++){
+			influence.add(most_influencial[n]);
+		}
+		
+		return influence;
 	}
 
 	public ArrayList<String> mostInfluentialModular(int k)
@@ -273,7 +318,7 @@ public class NetworkInfluence
 	
 	//Delete this later
 	public static void main(String[] args) {
-		NetworkInfluence nw = new NetworkInfluence("C:\\Users\\Thomas\\Desktop\\test.txt");
+		NetworkInfluence nw = new NetworkInfluence("C:\\Users\\Joey\\Desktop\\test.txt");
 		System.out.println(nw.graph.toStr());
 	}
 }
