@@ -43,7 +43,7 @@ public class WikiCrawler {
 		int pagesWithTopics = 0;
 		int counter = 0;
 		toVisit.add(new SimpleEntry<String,String>("",seedURL));
-		while(!toVisit.isEmpty()&&pagesWithTopics<=max){
+		while(!toVisit.isEmpty()&&pagesWithTopics<max){
 			SimpleEntry<String,String> toAndFrom = toVisit.poll();
 			String curURL = toAndFrom.getValue();
 			ArrayList<String> tempTopics = new ArrayList<String>();

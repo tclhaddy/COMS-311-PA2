@@ -219,7 +219,7 @@ public class NetworkInfluence
 
 	public float influence(String u)
 	{
-		float total = 0;
+		float total = 1;
 		HashSet<String> visited = new HashSet<String>();
 		Queue<SimpleEntry<String,Integer>> toVisit = new LinkedList<SimpleEntry<String,Integer>>();
 		toVisit.add(new SimpleEntry<String,Integer>(u,0));
@@ -241,12 +241,26 @@ public class NetworkInfluence
 
 	public float influence(ArrayList<String> s)
 	{
-		float total = 0;
-		
-		// implementation
-
-		// replace this:
-		return -1f;
+		float total = s.size();
+		HashSet<String> visited = new HashSet<String>();
+		Queue<SimpleEntry<String,Integer>> toVisit = new LinkedList<SimpleEntry<String,Integer>>();
+		for(int i=0; i<s.size(); i++){
+			toVisit.add(new SimpleEntry<String,Integer>(s.get(i),0));
+		}
+		while(!toVisit.isEmpty()){
+			SimpleEntry<String,Integer> curNode = toVisit.poll();
+			if(!visited.contains(curNode.getKey())&&!s.contains(curNode.getKey())){
+				if(curNode.getValue()!=0){
+					total+=1/(Math.pow(2,curNode.getValue()));
+				}
+				visited.add(curNode.getKey());
+				ListIterator<String> curList = graph.adjList[graph.getLoc.get(curNode.getKey())].listIterator();
+				while(curList.hasNext()){
+					toVisit.add(new SimpleEntry<String,Integer>(curList.next(),curNode.getValue()+1));
+				}
+			}
+		}
+		return total;
 	}
 
 	public ArrayList<String> mostInfluentialDegree(int k)
