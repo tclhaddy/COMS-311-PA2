@@ -59,41 +59,27 @@ public class NetworkInfluence
 		}
 		
 		private int addEdge(LinkedList<String> adjacencyList[], String vertex, String toAdd, int nextEmpty) {
-	        /*boolean added = false;
-	        int pos = 0;
-			while (!adjacencyList[pos].isEmpty() && !added) {
-	        	if (vertex.equals(adjacencyList[pos].get(0))) {
-	        		adjacencyList[pos].addLast(toAdd);
-	        		added = true;
-	        	}
-	        	else {
-	        		pos++;
-	        	}
-	        }
 			
-			//No vertex found, toAdd becomes a vertex
-			if (!added) {
-				adjacencyList[pos].addFirst(vertex);
-				adjacencyList[pos].add(toAdd);
-			}*/
 			if(!getLoc.containsKey(vertex)){
 				getLoc.put(vertex,nextEmpty);
+				adjacencyList[getLoc.get(vertex)].addFirst(vertex);
 				nextEmpty++;
 			}
-			adjList[getLoc.get(vertex)].add(toAdd);
+			adjacencyList[getLoc.get(vertex)].add(toAdd);
 			return nextEmpty;
 	    }
 		
 		private String toStr() {
+			
 			String result = "";
 			for (int i = 0; i < adjList.length; i++) {
 				for (int j = 0; j < adjList[i].size(); j++) {
 					if (j == 0)
-						result += "Vertex: [" + adjList[i].get(j) + "]--> "; 
+						result += "Vertex:{" + adjList[i].get(j) + "} --> "; 
 					else if (j == adjList[i].size()-1)
 						result += "[" + adjList[i].get(j) + "]";
 					else
-						result += "[" + adjList[i].get(j) + "]--> ";
+						result += "[" + adjList[i].get(j) + "] --> ";
 				}
 				result += "\n";
 			}
@@ -318,7 +304,7 @@ public class NetworkInfluence
 	
 	//Delete this later
 	public static void main(String[] args) {
-		NetworkInfluence nw = new NetworkInfluence("C:\\Users\\Joey\\Desktop\\test.txt");
+		NetworkInfluence nw = new NetworkInfluence("C:\\Users\\Thomas\\Documents\\java_isu\\workspace\\PA2\\directed_graph.txt");
 		System.out.println(nw.graph.toStr());
 	}
 }
