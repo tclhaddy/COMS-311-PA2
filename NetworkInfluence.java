@@ -22,6 +22,7 @@ public class NetworkInfluence
 		
 		private LinkedList<String> adjList[];
 		private HashMap<String,Integer> getLoc;
+		private String[] vertextList;
 		
 		private Graph(String graphData) throws FileNotFoundException {
 			getLoc = new HashMap<String,Integer>();
@@ -40,7 +41,7 @@ public class NetworkInfluence
 			
 			LinkedList<String> result[] = new LinkedList[vertices];
 			for (int i = 0; i < vertices; ++i) {
-	            result[i] = new LinkedList<>();
+	            result[i] = new LinkedList<String>();
 	        }
 			
 			int nextEmpty = 0;
@@ -58,11 +59,10 @@ public class NetworkInfluence
 			return result;
 		}
 		
-		private int addEdge(LinkedList<String> adjacencyList[], String vertex, String toAdd, int nextEmpty) {
-			
+		private int addEdge(LinkedList<String> adjacencyList[], String vertex, String toAdd, int nextEmpty){
 			if(!getLoc.containsKey(vertex)){
+				adjacencyList[nextEmpty].add(vertex);
 				getLoc.put(vertex,nextEmpty);
-				adjacencyList[getLoc.get(vertex)].addFirst(vertex);
 				nextEmpty++;
 			}
 			adjacencyList[getLoc.get(vertex)].add(toAdd);
@@ -70,16 +70,18 @@ public class NetworkInfluence
 	    }
 		
 		private String toStr() {
-			
 			String result = "";
 			for (int i = 0; i < adjList.length; i++) {
 				for (int j = 0; j < adjList[i].size(); j++) {
-					if (j == 0)
-						result += "Vertex:{" + adjList[i].get(j) + "} --> "; 
-					else if (j == adjList[i].size()-1)
+					if (j == 0){
+						result += "Vertex: " + "ver" + "[" + adjList[i].get(j) + "]--> "; 
+					}
+					else if (j == adjList[i].size()-1){
 						result += "[" + adjList[i].get(j) + "]";
-					else
-						result += "[" + adjList[i].get(j) + "] --> ";
+					}
+					else{
+						result += "[" + adjList[i].get(j) + "]--> ";
+					}
 				}
 				result += "\n";
 			}
@@ -318,7 +320,7 @@ public class NetworkInfluence
 	
 	//Delete this later
 	public static void main(String[] args) {
-		NetworkInfluence nw = new NetworkInfluence("C:\\Users\\Thomas\\Documents\\java_isu\\workspace\\PA2\\directed_graph.txt");
+		NetworkInfluence nw = new NetworkInfluence("C:\\Users\\Dustin\\workspace\\cs311pa2\\wikiCS.txt");
 		System.out.println(nw.graph.toStr());
 	}
 }

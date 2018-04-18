@@ -18,23 +18,6 @@ public class WikiCrawler {
 		topics = t;
 		fileName = f;
 	}
-	
-	public String getSeedURL() {
-		return seedURL;
-	}
-	
-	public int getMax() {
-		return max;
-	}
-	
-	public ArrayList<String> getTopics() {
-		return topics;
-	}
-	
-	public String getFileName() {
-		return fileName;
-	}
-	
 	public void crawl() throws InterruptedException, IOException {
 		PrintWriter writer = new PrintWriter(fileName,"UTF-8");
 		writer.println(max);
@@ -93,5 +76,12 @@ public class WikiCrawler {
 			}
 		}
 		writer.close();
+	}
+	public static void main(String[] args) throws InterruptedException, IOException{
+		ArrayList<String> topics = new ArrayList<String>();
+		//topics.add("Iowa State");
+		//topics.add("science");
+		WikiCrawler w = new WikiCrawler("/wiki/Complexity_theory",20,topics,"WikiCS.txt");
+		w.crawl();
 	}
 }
