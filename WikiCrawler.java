@@ -53,6 +53,7 @@ public class WikiCrawler {
 				boolean currentlyInPTag = false;
 				LinkedList<SimpleEntry<String,String>> allNextURLs = new LinkedList<SimpleEntry<String,String>>();
 				visited.add(curURL);
+				HashSet<String> noDup = new HashSet<String>();
 				while(scanner.hasNextLine()){
 					String curLine = scanner.nextLine();
 					if(curLine.contains("<p>")) currentlyInPTag = true;
@@ -61,27 +62,39 @@ public class WikiCrawler {
 							if(curLine.contains(tempTopics.get(i))) tempTopics.remove(i);
 						}
 					}
-					if(curLine.contains("href=\"/wiki/")){
+					if(currentlyInPTag&&curLine.contains("href=\"/wiki/")){
 						int startOfLink = curLine.indexOf("href=\"/wiki/")+6;
 						String nextURL = "";
 						while(curLine.charAt(startOfLink)!='\"'){
-							nextURL+= curLine.charAt(startOfLink);
+							nextURL += curLine.charAt(startOfLink);
 							startOfLink++;
 						}
-						//System.out.println(nextURL);
-						if(!nextURL.contains(":")&&!nextURL.contains("#"))allNextURLs.add(new SimpleEntry<String,String>(toAndFrom.getValue(),nextURL));
+						if(nextURL.equals("/wiki/Systems_theory")&&curURL.equals("/wiki/Complexity")){
+							System.out.print("");
+						}
+						if(!nextURL.contains(":")&&!nextURL.contains("#")&&!noDup.contains(nextURL)&&!nextURL.equals(curURL)){
+							allNextURLs.add(new SimpleEntry<String,String>(toAndFrom.getValue(),nextURL));
+							noDup.add(nextURL);
+						}
 					}
-					if(curLine.contains("<\\p>")) currentlyInPTag = false;
 				}
 				boolean thisPageHasAllTopics = tempTopics.isEmpty();
 				if(thisPageHasAllTopics){
 					toVisit.addAll(allNextURLs);
 					pagesWithTopics++;
+					System.out.println(toAndFrom.getKey() + " " + toAndFrom.getValue());
 					if(!toAndFrom.getKey().equals("")) writer.println(toAndFrom.getKey() + " " + toAndFrom.getValue());
 				}
 				scanner.close();
 				counter++;
 				if(counter%25==0) Thread.sleep(3000);
+			}
+		}
+		while(!toVisit.isEmpty()){
+			SimpleEntry<String,String> toAndFrom = toVisit.poll();
+			if(visited.contains(toAndFrom.getKey())&&visited.contains(toAndFrom.getValue())){
+				System.out.println(toAndFrom.getKey() + " " + toAndFrom.getValue());
+				writer.println(toAndFrom.getKey() + " " + toAndFrom.getValue());
 			}
 		}
 		writer.close();
