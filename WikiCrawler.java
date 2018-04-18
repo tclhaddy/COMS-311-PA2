@@ -69,9 +69,6 @@ public class WikiCrawler {
 							nextURL += curLine.charAt(startOfLink);
 							startOfLink++;
 						}
-						if(nextURL.equals("/wiki/Systems_theory")&&curURL.equals("/wiki/Complexity")){
-							System.out.print("");
-						}
 						if(!nextURL.contains(":")&&!nextURL.contains("#")&&!noDup.contains(nextURL)&&!nextURL.equals(curURL)){
 							allNextURLs.add(new SimpleEntry<String,String>(toAndFrom.getValue(),nextURL));
 							noDup.add(nextURL);
@@ -82,7 +79,6 @@ public class WikiCrawler {
 				if(thisPageHasAllTopics){
 					toVisit.addAll(allNextURLs);
 					pagesWithTopics++;
-					System.out.println(toAndFrom.getKey() + " " + toAndFrom.getValue());
 					if(!toAndFrom.getKey().equals("")) writer.println(toAndFrom.getKey() + " " + toAndFrom.getValue());
 				}
 				scanner.close();
@@ -93,7 +89,6 @@ public class WikiCrawler {
 		while(!toVisit.isEmpty()){
 			SimpleEntry<String,String> toAndFrom = toVisit.poll();
 			if(visited.contains(toAndFrom.getKey())&&visited.contains(toAndFrom.getValue())){
-				System.out.println(toAndFrom.getKey() + " " + toAndFrom.getValue());
 				writer.println(toAndFrom.getKey() + " " + toAndFrom.getValue());
 			}
 		}
