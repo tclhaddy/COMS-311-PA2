@@ -22,7 +22,6 @@ public class NetworkInfluence
 		
 		private LinkedList<String> adjList[];
 		private HashMap<String,Integer> getLoc;
-		private String[] vertextList;
 		
 		private Graph(String graphData) throws FileNotFoundException {
 			getLoc = new HashMap<String,Integer>();
@@ -60,6 +59,7 @@ public class NetworkInfluence
 		}
 		
 		private int addEdge(LinkedList<String> adjacencyList[], String vertex, String toAdd, int nextEmpty){
+			
 			if(!getLoc.containsKey(vertex)){
 				adjacencyList[nextEmpty].add(vertex);
 				getLoc.put(vertex,nextEmpty);
@@ -74,7 +74,7 @@ public class NetworkInfluence
 			for (int i = 0; i < adjList.length; i++) {
 				for (int j = 0; j < adjList[i].size(); j++) {
 					if (j == 0){
-						result += "Vertex: " + "ver" + "[" + adjList[i].get(j) + "]--> "; 
+						result += "Vertex: " + "[" + adjList[i].get(j) + "]--> "; 
 					}
 					else if (j == adjList[i].size()-1){
 						result += "[" + adjList[i].get(j) + "]";
@@ -104,18 +104,7 @@ public class NetworkInfluence
 	
 	public int outDegree(String v)
 	{
-		int total = 0;
-		
-		//Goes through each vertex in adjList
-		for(int i=0;i<graph.adjList.length;i++){
-			
-			//If the first word is the same as the vertice, add 1 to total
-			if(graph.adjList[i].get(0).equals(v))
-				total++;
-		}
-		
-		//Send back the total -> the number of times v is the first word in adjList
-		return total;
+		return graph.adjList[graph.getLoc.get(v)].size()-1;
 	}
 
 	public ArrayList<String> shortestPath(String u, String v)
@@ -304,23 +293,36 @@ public class NetworkInfluence
 
 	public ArrayList<String> mostInfluentialModular(int k)
 	{
-		// implementation
-
-		// replace this:
-		return null;
+		ArrayList<String> result = new ArrayList<>();
+		float[] infVal = new float[graph.adjList.length];
+		//Contains the float value<Key> from influence and the vertex position<Value>
+		HashMap<Float,Integer> influence = new HashMap<Float,Integer>();
+		
+		for (int i = 0; i < graph.adjList.length; i++) {
+			infVal[i] = influence(graph.adjList[i].get(0));
+			influence.put(infVal[i], i);
+		}
+		
+		Arrays.sort(infVal);
+		
+		for (int i = 0; i < k; i++) {
+			result.add(graph.adjList[influence.get(infVal[infVal.length-1-i])].get(0));
+		}
+		return result;
 	}
 
 	public ArrayList<String> mostInfluentialSubModular(int k)
 	{
-		// implementation
-
-		// replace this:
-		return null;
+		ArrayList<String> result = new ArrayList<>();
+		for (int i = 1; i < k; i++) {
+			//TODO 
+		}
+		return result;
 	}
 	
 	//Delete this later
 	public static void main(String[] args) {
-		NetworkInfluence nw = new NetworkInfluence("C:\\Users\\Dustin\\workspace\\cs311pa2\\wikiCS.txt");
+		NetworkInfluence nw = new NetworkInfluence("C:\\Users\\Thomas\\Documents\\java_isu\\workspace\\PA2\\directed_graph.txt");
 		System.out.println(nw.graph.toStr());
 	}
 }
