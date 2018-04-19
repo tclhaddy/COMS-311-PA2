@@ -54,13 +54,11 @@ public class NetworkInfluence
 				}	
 				s.close();
 			}
-			System.out.println(nextEmpty);
 			scan.close();
 			return result;
 		}
 		
 		private int addEdge(LinkedList<String> adjacencyList[], String vertex, String toAdd, int nextEmpty){
-			//System.out.println(getLoc.containsKey(vertex)+" "+getLoc.containsKey(toAdd));
 			if(!getLoc.containsKey(vertex)){
 				adjacencyList[nextEmpty].add(vertex);
 				getLoc.put(vertex,nextEmpty);
@@ -68,7 +66,7 @@ public class NetworkInfluence
 			}
 			if(!getLoc.containsKey(toAdd)){
 				adjacencyList[nextEmpty].add(toAdd);
-				getLoc.put(vertex,nextEmpty);
+				getLoc.put(toAdd,nextEmpty);
 				nextEmpty++;
 			}
 			adjacencyList[getLoc.get(vertex)].add(toAdd);
@@ -110,7 +108,18 @@ public class NetworkInfluence
 	
 	public int outDegree(String v)
 	{
-		return graph.adjList[graph.getLoc.get(v)].size()-1;
+		int total = 0;
+		
+		//Goes through each vertex in adjList
+		for(int i=0;i<graph.adjList.length;i++){
+			
+			//If the first word is the same as the vertice, add 1 to total
+			if(graph.adjList[i].get(0).equals(v))
+				total++;
+		}
+		
+		//Send back the total -> the number of times v is the first word in adjList
+		return total;
 	}
 
 	public ArrayList<String> shortestPath(String u, String v)
@@ -211,8 +220,6 @@ public class NetworkInfluence
 			if(!visited.contains(curNode.getKey())){
 				total+=1/(Math.pow(2,curNode.getValue()));
 				visited.add(curNode.getKey());
-				System.out.println(curNode.getKey());
-				System.out.println(graph.getLoc.get(curNode.getKey()));
 				ListIterator<String> curList = graph.adjList[graph.getLoc.get(curNode.getKey())].listIterator();
 				curList.next();
 				while(curList.hasNext()){
@@ -299,31 +306,18 @@ public class NetworkInfluence
 
 	public ArrayList<String> mostInfluentialModular(int k)
 	{
-		ArrayList<String> result = new ArrayList<>();
-		float[] infVal = new float[graph.adjList.length];
-		//Contains the float value<Key> from influence and the vertex position<Value>
-		HashMap<Float,Integer> influence = new HashMap<Float,Integer>();
-		
-		for (int i = 0; i < graph.adjList.length; i++) {
-			infVal[i] = influence(graph.adjList[i].get(0));
-			influence.put(infVal[i], i);
-		}
-		
-		Arrays.sort(infVal);
-		
-		for (int i = 0; i < k; i++) {
-			result.add(graph.adjList[influence.get(infVal[infVal.length-1-i])].get(0));
-		}
-		return result;
+		// implementation
+
+		// replace this:
+		return null;
 	}
 
 	public ArrayList<String> mostInfluentialSubModular(int k)
 	{
-		ArrayList<String> result = new ArrayList<>();
-		for (int i = 1; i < k; i++) {
-			//TODO 
-		}
-		return result;
+		// implementation
+
+		// replace this:
+		return null;
 	}
 	
 	//Delete this later
