@@ -200,7 +200,7 @@ public class NetworkInfluence
 
 	public float influence(String u)
 	{
-		float total = 1;
+		float total = 0;
 		HashSet<String> visited = new HashSet<String>();
 		Queue<SimpleEntry<String,Integer>> toVisit = new LinkedList<SimpleEntry<String,Integer>>();
 		toVisit.add(new SimpleEntry<String,Integer>(u,0));
