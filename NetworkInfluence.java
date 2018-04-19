@@ -213,25 +213,20 @@ public class NetworkInfluence
 	{
 		ArrayList<String> all_nodes = new ArrayList<String>();
 		for(int i=0;i<graph.adjList.length;i++){
-			boolean visited_one = false;
-			boolean visited_two = false;
+			boolean visited = false;
 			for(int j=0;j<all_nodes.size();j++){
 				if(graph.adjList[i].get(0).equals(all_nodes.get(j)))
-					visited_one = true;
-				if(graph.adjList[i].get(1).equals(all_nodes.get(j)))
-					visited_two = true;
+					visited = true;
 			}
-			if(!visited_one)
+			if(!visited)
 				all_nodes.add(graph.adjList[i].get(0));
-			if(!visited_two)
-				all_nodes.add(graph.adjList[i].get(1));
 		}
 		
 		String[] most_influencial = new String[k];
 		float[] influencial_val = new float[k];
 		int index = 0;
 		for(int i=0;i<all_nodes.size();i++){
-			float a = influence(all_nodes.get(i));
+			float a = outDegree(all_nodes.get(i));
 			if(index < k){
 				most_influencial[index] = all_nodes.get(i);
 				influencial_val[index] = a;
