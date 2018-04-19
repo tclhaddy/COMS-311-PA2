@@ -22,7 +22,6 @@ public class NetworkInfluence
 		
 		private LinkedList<String> adjList[];
 		private HashMap<String,Integer> getLoc;
-		private String[] vertextList;
 		
 		private Graph(String graphData) throws FileNotFoundException {
 			getLoc = new HashMap<String,Integer>();
@@ -55,13 +54,20 @@ public class NetworkInfluence
 				}	
 				s.close();
 			}
+			System.out.println(nextEmpty);
 			scan.close();
 			return result;
 		}
 		
 		private int addEdge(LinkedList<String> adjacencyList[], String vertex, String toAdd, int nextEmpty){
+			System.out.println(getLoc.containsKey(vertex)+" "+getLoc.containsKey(toAdd));
 			if(!getLoc.containsKey(vertex)){
 				adjacencyList[nextEmpty].add(vertex);
+				getLoc.put(vertex,nextEmpty);
+				nextEmpty++;
+			}
+			if(!getLoc.containsKey(toAdd)){
+				adjacencyList[nextEmpty].add(toAdd);
 				getLoc.put(vertex,nextEmpty);
 				nextEmpty++;
 			}
@@ -74,7 +80,7 @@ public class NetworkInfluence
 			for (int i = 0; i < adjList.length; i++) {
 				for (int j = 0; j < adjList[i].size(); j++) {
 					if (j == 0){
-						result += "Vertex: " + "ver" + "[" + adjList[i].get(j) + "]--> "; 
+						result += "Vertex: " + "[" + adjList[i].get(j) + "]--> "; 
 					}
 					else if (j == adjList[i].size()-1){
 						result += "[" + adjList[i].get(j) + "]";
@@ -214,11 +220,12 @@ public class NetworkInfluence
 		while(!toVisit.isEmpty()){
 			SimpleEntry<String,Integer> curNode = toVisit.poll();
 			if(!visited.contains(curNode.getKey())){
-				if(curNode.getValue()!=0){
-					total+=1/(Math.pow(2,curNode.getValue()));
-				}
+				total+=1/(Math.pow(2,curNode.getValue()));
 				visited.add(curNode.getKey());
+				System.out.println(curNode.getKey());
+				System.out.println(graph.getLoc.get(curNode.getKey()));
 				ListIterator<String> curList = graph.adjList[graph.getLoc.get(curNode.getKey())].listIterator();
+				curList.next();
 				while(curList.hasNext()){
 					toVisit.add(new SimpleEntry<String,Integer>(curList.next(),curNode.getValue()+1));
 				}
@@ -237,12 +244,11 @@ public class NetworkInfluence
 		}
 		while(!toVisit.isEmpty()){
 			SimpleEntry<String,Integer> curNode = toVisit.poll();
-			if(!visited.contains(curNode.getKey())&&!s.contains(curNode.getKey())){
-				if(curNode.getValue()!=0){
-					total+=1/(Math.pow(2,curNode.getValue()));
-				}
+			if(!visited.contains(curNode.getKey())){
+				total+=1/(Math.pow(2,curNode.getValue()));
 				visited.add(curNode.getKey());
 				ListIterator<String> curList = graph.adjList[graph.getLoc.get(curNode.getKey())].listIterator();
+				curList.next();
 				while(curList.hasNext()){
 					toVisit.add(new SimpleEntry<String,Integer>(curList.next(),curNode.getValue()+1));
 				}
@@ -321,6 +327,7 @@ public class NetworkInfluence
 	//Delete this later
 	public static void main(String[] args) {
 		NetworkInfluence nw = new NetworkInfluence("C:\\Users\\Dustin\\workspace\\cs311pa2\\wikiCS.txt");
-		System.out.println(nw.graph.toStr());
+		//System.out.println(nw.graph.toStr());
+		System.out.println(nw.influence("/wiki/Computer_Science"));
 	}
 }
