@@ -259,37 +259,74 @@ public class NetworkInfluence
 	{
 		ArrayList<String> result = new ArrayList<>();
 		float[] infVal = new float[graph.adjList.length];
-		//Contains the float value<Key> from influence and the vertex position<Value>
-		HashMap<Float,Integer> influence = new HashMap<Float,Integer>();
-		
+		HashMap<String,Float> influ = new HashMap<String,Float>();
 		for (int i = 0; i < graph.adjList.length; i++) {
 			infVal[i] = influence(graph.adjList[i].get(0));
-			influence.put(infVal[i], i);
+			influ.put(graph.adjList[i].get(0),infVal[i]);
 		}
-		
 		Arrays.sort(infVal);
-		
-		for (int i = 0; i < k; i++) {
-			result.add(graph.adjList[influence.get(infVal[infVal.length-1-i])].get(0));
+		ArrayList<Float> topK = new ArrayList<Float>();
+		for(int i=infVal.length-k; i<infVal.length; i++){
+			topK.add(infVal[i]);
+		}
+		for (int i = 0; i<graph.adjList.length; i++){
+			if(topK.contains(influ.get(graph.adjList[i].get(0)))){
+				result.add(graph.adjList[i].get(0));
+			}
+			if(result.size()==k) break;
 		}
 		return result;
 	}
 
 	public ArrayList<String> mostInfluentialSubModular(int k)
 	{
-		// implementation
-
-		// replace this:
-		return null;
+		ArrayList<String> result = new ArrayList<>();
+		ArrayList<SimpleEntry<String,Float>> allInf = new ArrayList<SimpleEntry<String,Float>>();
+		for(int i=0; i<graph.adjList.length; i++){
+			allInf.add(new SimpleEntry<String,Float>(graph.adjList[i].get(0),influence(graph.adjList[i].get(0))));
+		}
+		float smallestInK = Float.MAX_VALUE;
+		for(int i=1; i<=k; i++){
+			SimpleEntry<String,Float> cur = new SimpleEntry<String,Float>("init",0f);
+			int indexToRemove = 0;
+			for(int j=0; j<allInf.size(); j++){
+				if(allInf.get(j).getValue()<=smallestInK&&allInf.get(j).getValue()>cur.getValue()){
+					cur = allInf.get(j);
+					indexToRemove = j;
+				}
+			}
+			smallestInK = cur.getValue();
+			result.add(cur.getKey());
+			allInf.remove(indexToRemove);
+		}
+		return result;
 	}
 	
 	//Delete this later
 	public static void main(String[] args) {
 		ArrayList<String> set = new ArrayList<String>();
-		set.add("/wiki/Boolean_algebra");
-		set.add("/wiki/Mathematics");
+		set.add("/wiki/Computer_Science");
+		set.add("/wiki/Science");
+		set.add("/wiki/Formal_science");
+		set.add("/wiki/Astrophysics");
+		set.add("/wiki/List_of_life_sciences");
+		set.add("/wiki/Continuum_mechanics");
+		set.add("/wiki/Chemistry");
+		set.add("/wiki/Earth_science");
+		set.add("/wiki/Physics");
+		set.add("/wiki/Geophysics");
+		set.add("/wiki/Theoretical_physics");
+		set.add("/wiki/Biophysics");
+		set.add("/wiki/Quantum_mechanics");
+		set.add("/wiki/Mechanics");
+		set.add("/wiki/Modern_physics");
 		NetworkInfluence nw = new NetworkInfluence("C:\\Users\\Dustin\\workspace\\cs311pa2\\wikiCS.txt");
 		//System.out.println(nw.graph.toStr());
-		System.out.println(nw.influence(set));
+		for(int i=0; i<set.size(); i++){
+			System.out.println(set.get(i)+" "+nw.influence(set.get(i)));
+		}
+		System.out.println(nw.mostInfluentialDegree(10).toString());
+		System.out.println(nw.mostInfluentialModular(10).toString());
+		System.out.println(nw.mostInfluentialSubModular(10).toString());
 	}
 }
