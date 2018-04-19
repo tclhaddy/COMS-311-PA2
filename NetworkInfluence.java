@@ -306,10 +306,22 @@ public class NetworkInfluence
 
 	public ArrayList<String> mostInfluentialModular(int k)
 	{
-		// implementation
-
-		// replace this:
-		return null;
+		ArrayList<String> result = new ArrayList<>();
+		float[] infVal = new float[graph.adjList.length];
+		//Contains the float value<Key> from influence and the vertex position<Value>
+		HashMap<Float,Integer> influence = new HashMap<Float,Integer>();
+		
+		for (int i = 0; i < graph.adjList.length; i++) {
+			infVal[i] = influence(graph.adjList[i].get(0));
+			influence.put(infVal[i], i);
+		}
+		
+		Arrays.sort(infVal);
+		
+		for (int i = 0; i < k; i++) {
+			result.add(graph.adjList[influence.get(infVal[infVal.length-1-i])].get(0));
+		}
+		return result;
 	}
 
 	public ArrayList<String> mostInfluentialSubModular(int k)
