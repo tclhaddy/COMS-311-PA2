@@ -1,16 +1,11 @@
-import static org.junit.Assert.*;
-
 import org.junit.Test;
-import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import org.junit.Assert;
-import org.junit.Test;
 
 public class NetworkInfluenceTest {
-	NetworkInfluence ni = new NetworkInfluence("C:\\Users\\Joey\\Desktop\\inftest.txt");;
-
+	NetworkInfluence ni = new NetworkInfluence("C:\\Users\\Thomas\\Documents\\java_isu\\workspace\\PA2\\infile.txt");;
+	
 	@Test
 	public void testOutDegree() {		
 		int outDegree_A = ni.outDegree("A");
