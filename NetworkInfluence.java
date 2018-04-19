@@ -315,10 +315,33 @@ public class NetworkInfluence
 
 	public ArrayList<String> mostInfluentialSubModular(int k)
 	{
-		// implementation
-
-		// replace this:
-		return null;
+		ArrayList<String> S = new ArrayList<String>();
+		ArrayList<String> V = new ArrayList<String>();
+		ArrayList<String> U = new ArrayList<String>();
+		for(int i=0;i<graph.adjList.length;i++){
+			V.addAll(S);
+			V.add(graph.adjList[i].get(0));
+			
+			boolean lessthan = false;
+			for(int j=0;j<graph.adjList.length;j++){
+				if(i==j)
+					break;
+				else{
+					U.addAll(S);
+					U.add(graph.adjList[j].get(0));
+					if(influence(U) > influence(V)){
+						lessthan = true;
+						break;
+					}
+					U.clear();
+				}
+			}
+			if(lessthan == true){
+				S.add(graph.adjList[i].get(0));
+			}
+			V.clear();
+		}
+		return S;
 	}
 	
 	//Delete this later
