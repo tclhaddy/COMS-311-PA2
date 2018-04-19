@@ -143,21 +143,25 @@ public class NetworkInfluence
 
 	public int distance(String u, String v)
 	{
+		if(u.equals(v))
+			return 0;
 		ArrayList<String> shortestPath;
 		shortestPath = shortestPath(u,v);
-		return shortestPath.size();
+		return shortestPath.size()-1;
 	}
 
 	public int distance(ArrayList<String> s, String v)     // Goes through every String in s
 	{                                                      // to find and return the shortest distance
 		int min;
-		min = distance(s.get(0),v);
-		for(int i=1;i<s.size();i++){
+		min = Integer.MAX_VALUE;
+		for(int i=0;i<s.size();i++){
 			int nw=distance(s.get(i),v);
-			if(nw < min){
+			if((nw < min)&&(nw!=-1)){
 				min = nw;
 			}
 		}
+		if(min==Integer.MAX_VALUE)
+			return -1;
 		return min;
 	}
 
