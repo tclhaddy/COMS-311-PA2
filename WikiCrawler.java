@@ -45,7 +45,7 @@ public class WikiCrawler {
 							if(curLine.contains(tempTopics.get(i))) tempTopics.remove(i);
 						}
 					}
-					while(curLine.contains("href=\"/wiki/")){
+					while(currentlyInPTag&&curLine.contains("href=\"/wiki/")){
 						int startOfLink = curLine.indexOf("href=\"/wiki/")+6;
 						String nextURL = "";
 						while(curLine.charAt(startOfLink)!='\"'){
