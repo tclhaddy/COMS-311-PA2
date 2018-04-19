@@ -45,7 +45,7 @@ public class WikiCrawler {
 							if(curLine.contains(tempTopics.get(i))) tempTopics.remove(i);
 						}
 					}
-					if(currentlyInPTag&&curLine.contains("href=\"/wiki/")){
+					while(curLine.contains("href=\"/wiki/")){
 						int startOfLink = curLine.indexOf("href=\"/wiki/")+6;
 						String nextURL = "";
 						while(curLine.charAt(startOfLink)!='\"'){
@@ -56,6 +56,7 @@ public class WikiCrawler {
 							allNextURLs.add(new SimpleEntry<String,String>(toAndFrom.getValue(),nextURL));
 							noDup.add(nextURL);
 						}
+						curLine = curLine.replace(nextURL,"");
 					}
 				}
 				boolean thisPageHasAllTopics = tempTopics.isEmpty();
