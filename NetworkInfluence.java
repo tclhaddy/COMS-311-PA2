@@ -108,18 +108,7 @@ public class NetworkInfluence
 	
 	public int outDegree(String v)
 	{
-		int total = 0;
-		
-		//Goes through each vertex in adjList
-		for(int i=0;i<graph.adjList.length;i++){
-			
-			//If the first word is the same as the vertice, add 1 to total
-			if(graph.adjList[i].get(0).equals(v))
-				total++;
-		}
-		
-		//Send back the total -> the number of times v is the first word in adjList
-		return total;
+		return graph.adjList[graph.getLoc.get(v)].size()-1;
 	}
 
 	public ArrayList<String> shortestPath(String u, String v)
