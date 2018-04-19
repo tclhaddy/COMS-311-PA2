@@ -113,69 +113,32 @@ public class NetworkInfluence
 
 	public ArrayList<String> shortestPath(String u, String v)
 	{
-		ArrayList<String> visited = new ArrayList<String>();
-		ArrayList<String> result;
-		
-		result = shortestPathHelper(u, v, visited);
-		
-		ArrayList<String> result2 = new ArrayList<String>();
-		
-		for(int i=result.size()-1;i>=0;i--)
-			result2.add(result.get(i));
-		
-		return result2;
-	}
-	
-	// Helper Method to find shortest path
-	private ArrayList<String> shortestPathHelper(String from, String to, ArrayList<String> visited){
-		ArrayList<String> out = new ArrayList<String>();
-		visited.add(from);
-		
-		//Goes through the adjList to find all connected vertices
-		for(int i=0;i<graph.adjList.length;i++){
-			if(graph.adjList[i].get(0).equals(from)){
-				boolean hasVisited = false;
-				
-				//Checks if the found edge has already been visited
-				for(int j=0;j<visited.size();j++){
-					if(graph.adjList[i].get(1)==visited.get(j)){
-						hasVisited = true;
-						break;
-					}
-				}
-				if(hasVisited == false){
-					out.add(graph.adjList[i].get(1));
+		HashSet<String> visited = new HashSet<String>();
+		ArrayList<String> path = new ArrayList<String>();
+		if(graph.getLoc.get(u)==null||graph.getLoc.get(v)==null) return path;
+		Queue<SimpleEntry<String,ArrayList<String>>> toVisit = new LinkedList<SimpleEntry<String,ArrayList<String>>>();
+		toVisit.add(new SimpleEntry<String,ArrayList<String>>(u, new ArrayList<String>()));
+		while(!toVisit.isEmpty()){
+			SimpleEntry<String,ArrayList<String>> curNode = toVisit.poll();
+			if(v.equals(curNode.getKey())){
+				path.addAll(curNode.getValue());
+				path.add(curNode.getKey());
+				if(u.equals(v)) path.add(curNode.getKey());
+				break;
+			}
+			else if(!visited.contains(curNode.getKey())){
+				visited.add(curNode.getKey());
+				ListIterator<String> curList = graph.adjList[graph.getLoc.get(curNode.getKey())].listIterator();
+				curList.next();
+				while(curList.hasNext()){
+					ArrayList<String> nextPath = new ArrayList<String>();
+					nextPath.addAll(curNode.getValue());
+					nextPath.add(curNode.getKey());
+					toVisit.add(new SimpleEntry<String,ArrayList<String>>(curList.next(),nextPath));
 				}
 			}
 		}
-		
-		ArrayList<String> shortArr = new ArrayList<String>();
-		if(out.size() == 0)
-			return shortArr;
-		
-		for(int n=0;n<out.size();n++){
-			if(out.equals(to)){
-				shortArr.add(to);
-				shortArr.add(from);
-				return shortArr;
-			}
-		}
-		
-		shortArr = shortestPathHelper(out.get(0), to, visited);
-		for(int m=1;m<out.size();m++){
-			ArrayList<String> arr2 = shortestPathHelper(out.get(m),to,visited);
-			boolean contain = false;
-			for(int z=0;z<arr2.size();z++){
-				if(arr2.get(z).equals(to))
-					contain = true;
-			}
-			if((arr2.size() < shortArr.size())&&(contain == true)){
-				shortArr = arr2;
-			}
-		}
-		
-		shortArr.add(from);
-		return shortArr;
+		return path;
 	}
 
 	public int distance(String u, String v)
@@ -221,7 +184,7 @@ public class NetworkInfluence
 
 	public float influence(ArrayList<String> s)
 	{
-		float total = s.size();
+		float total = 0;
 		HashSet<String> visited = new HashSet<String>();
 		Queue<SimpleEntry<String,Integer>> toVisit = new LinkedList<SimpleEntry<String,Integer>>();
 		for(int i=0; i<s.size(); i++){
@@ -244,22 +207,53 @@ public class NetworkInfluence
 
 	public ArrayList<String> mostInfluentialDegree(int k)
 	{
-		ArrayList<String> result = new ArrayList<>();
-		float[] infVal = new float[graph.adjList.length];
-		//Contains the float value<Key> from influence and the vertex position<Value>
-		HashMap<Float,Integer> outdeg = new HashMap<Float,Integer>();
-		
-		for (int i = 0; i < graph.adjList.length; i++) {
-			infVal[i] = outDegree(graph.adjList[i].get(0));
-			outdeg.put(infVal[i], i);
+		ArrayList<String> all_nodes = new ArrayList<String>();
+		for(int i=0;i<graph.adjList.length;i++){
+			boolean visited_one = false;
+			boolean visited_two = false;
+			for(int j=0;j<all_nodes.size();j++){
+				if(graph.adjList[i].get(0).equals(all_nodes.get(j)))
+					visited_one = true;
+				if(graph.adjList[i].get(1).equals(all_nodes.get(j)))
+					visited_two = true;
+			}
+			if(!visited_one)
+				all_nodes.add(graph.adjList[i].get(0));
+			if(!visited_two)
+				all_nodes.add(graph.adjList[i].get(1));
 		}
 		
-		Arrays.sort(infVal);
-		
-		for (int i = 0; i < k; i++) {
-			result.add(graph.adjList[outdeg.get(infVal[infVal.length-1-i])].get(0));
+		String[] most_influencial = new String[k];
+		float[] influencial_val = new float[k];
+		int index = 0;
+		for(int i=0;i<all_nodes.size();i++){
+			float a = influence(all_nodes.get(i));
+			if(index < k){
+				most_influencial[index] = all_nodes.get(i);
+				influencial_val[index] = a;
+				index++;
+			}else{
+				float min = influencial_val[0];
+				int ind = 0;
+				for(int j=1;j<influencial_val.length;j++){
+					if(influencial_val[j]<min){
+						min = influencial_val[j];
+						ind = j;
+					}
+				}
+				if(a > min){
+					influencial_val[ind] = a;
+					most_influencial[ind] = all_nodes.get(i);
+				}
+			}
 		}
-		return result;
+		
+		ArrayList<String> influence = new ArrayList<String>();
+		for(int n=0;n<most_influencial.length;n++){
+			influence.add(most_influencial[n]);
+		}
+		
+		return influence;
 	}
 
 	public ArrayList<String> mostInfluentialModular(int k)
@@ -284,39 +278,19 @@ public class NetworkInfluence
 
 	public ArrayList<String> mostInfluentialSubModular(int k)
 	{
-		ArrayList<String> S = new ArrayList<String>();
-		ArrayList<String> V = new ArrayList<String>();
-		ArrayList<String> U = new ArrayList<String>();
-		for(int i=0;i<graph.adjList.length;i++){
-			V.addAll(S);
-			V.add(graph.adjList[i].get(0));
-			
-			boolean lessthan = false;
-			for(int j=0;j<graph.adjList.length;j++){
-				if(i==j)
-					break;
-				else{
-					U.addAll(S);
-					U.add(graph.adjList[j].get(0));
-					if(influence(U) > influence(V)){
-						lessthan = true;
-						break;
-					}
-					U.clear();
-				}
-			}
-			if(lessthan == true){
-				S.add(graph.adjList[i].get(0));
-			}
-			V.clear();
-		}
-		return S;
+		// implementation
+
+		// replace this:
+		return null;
 	}
 	
 	//Delete this later
 	public static void main(String[] args) {
+		ArrayList<String> set = new ArrayList<String>();
+		set.add("/wiki/Boolean_algebra");
+		set.add("/wiki/Mathematics");
 		NetworkInfluence nw = new NetworkInfluence("C:\\Users\\Dustin\\workspace\\cs311pa2\\wikiCS.txt");
 		//System.out.println(nw.graph.toStr());
-		System.out.println(nw.influence("/wiki/Computer_Science"));
+		System.out.println(nw.influence(set));
 	}
 }
