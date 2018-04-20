@@ -145,8 +145,8 @@ public class NetworkInfluence
 		return shortestPath.size()-1;
 	}
 
-	public int distance(ArrayList<String> s, String v)     // Goes through every String in s
-	{                                                      // to find and return the shortest distance
+	public int distance(ArrayList<String> s, String v)
+	{
 		int min;
 		min = Integer.MAX_VALUE;
 		for(int i=0;i<s.size();i++){
