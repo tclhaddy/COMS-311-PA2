@@ -1,11 +1,6 @@
-// LEAVE THIS FILE IN THE DEFAULT PACKAGE
-//  (i.e., DO NOT add 'package cs311.pa1;' or similar)
-
-// DO NOT MODIFY THE EXISTING METHOD SIGNATURES
-//  (you may, however, add member fields and additional methods)
-
-// DO NOT INCLUDE LIBRARIES OUTSIDE OF THE JAVA STANDARD LIBRARY
-//  (i.e., you may only include libraries of the form java.*)
+/*
+ * @author Dustin Welu, Joseph Trom, Thomas Haddy
+ */
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -338,56 +333,5 @@ public class NetworkInfluence
 
 		result.addAll(S);
 		return result;
-		
-		/*
-		ArrayList<String> result = new ArrayList<>();
-		ArrayList<SimpleEntry<String,Float>> allInf = new ArrayList<SimpleEntry<String,Float>>();
-		for(int i=0; i<graph.adjList.length; i++){
-			allInf.add(new SimpleEntry<String,Float>(graph.adjList[i].get(0),influence(graph.adjList[i].get(0))));
-		}
-		float smallestInK = Float.MAX_VALUE;
-		for(int i=1; i<=k; i++){
-			SimpleEntry<String,Float> cur = new SimpleEntry<String,Float>("init",0f);
-			int indexToRemove = 0;
-			for(int j=0; j<allInf.size(); j++){
-				if(allInf.get(j).getValue()<=smallestInK&&allInf.get(j).getValue()>cur.getValue()){
-					cur = allInf.get(j);
-					indexToRemove = j;
-				}
-			}
-			smallestInK = cur.getValue();
-			result.add(cur.getKey());
-			allInf.remove(indexToRemove);
-		}
-		return result;
-		*/
-	}
-	
-	//Delete this later
-	public static void main(String[] args) {
-		ArrayList<String> set = new ArrayList<String>();
-		set.add("/wiki/Computer_Science");
-		set.add("/wiki/Science");
-		set.add("/wiki/Formal_science");
-		set.add("/wiki/Astrophysics");
-		set.add("/wiki/List_of_life_sciences");
-		set.add("/wiki/Continuum_mechanics");
-		set.add("/wiki/Chemistry");
-		set.add("/wiki/Earth_science");
-		set.add("/wiki/Physics");
-		set.add("/wiki/Geophysics");
-		set.add("/wiki/Theoretical_physics");
-		set.add("/wiki/Biophysics");
-		set.add("/wiki/Quantum_mechanics");
-		set.add("/wiki/Mechanics");
-		set.add("/wiki/Modern_physics");
-		NetworkInfluence nw = new NetworkInfluence("C:\\Users\\Dustin\\workspace\\cs311pa2\\wikiCS.txt");
-		//System.out.println(nw.graph.toStr());
-		for(int i=0; i<set.size(); i++){
-			System.out.println(set.get(i)+" "+nw.influence(set.get(i)));
-		}
-		System.out.println(nw.mostInfluentialDegree(10).toString());
-		System.out.println(nw.mostInfluentialModular(10).toString());
-		System.out.println(nw.mostInfluentialSubModular(10).toString());
 	}
 }

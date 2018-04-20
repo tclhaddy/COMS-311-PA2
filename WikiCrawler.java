@@ -3,6 +3,10 @@ import java.net.*;
 import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
 
+/*
+ * @author Dustin Welu, Joseph Trom, Thomas Haddy 
+ */
+
 public class WikiCrawler {
 	
 	//private static final String BASE_URL = "http://web.cs.iastate.edu/~pavan";
@@ -40,7 +44,7 @@ public class WikiCrawler {
 				while(scanner.hasNextLine()){
 					String curLine = scanner.nextLine();
 					if(curLine.contains("<p>")) currentlyInPTag = true;
-					if(currentlyInPTag&&!tempTopics.isEmpty()){
+					if(!tempTopics.isEmpty()){
 						for(int i=0; i<tempTopics.size(); i++){
 							if(curLine.contains(tempTopics.get(i))) tempTopics.remove(i);
 						}
@@ -77,12 +81,5 @@ public class WikiCrawler {
 			}
 		}
 		writer.close();
-	}
-	public static void main(String[] args) throws InterruptedException, IOException{
-		ArrayList<String> topics = new ArrayList<String>();
-		//topics.add("Iowa State");
-		//topics.add("science");
-		WikiCrawler w = new WikiCrawler("/wiki/Complexity_theory",20,topics,"WikiCS.txt");
-		w.crawl();
 	}
 }
