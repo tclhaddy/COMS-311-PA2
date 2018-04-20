@@ -281,6 +281,66 @@ public class NetworkInfluence
 	public ArrayList<String> mostInfluentialSubModular(int k)
 	{
 		ArrayList<String> result = new ArrayList<>();
+		ArrayList<String> all_nodes = new ArrayList<String>();
+		for(int i=0;i<graph.adjList.length;i++){
+			boolean visited = false;
+			for(int j=0;j<all_nodes.size();j++){
+				if(graph.adjList[i].get(0).equals(all_nodes.get(j)))
+					visited = true;
+			}
+			if(!visited)
+				all_nodes.add(graph.adjList[i].get(0));
+		}
+		
+		ArrayList<String> S = new ArrayList<String>();
+		ArrayList<String> V = new ArrayList<String>();
+		ArrayList<String> U = new ArrayList<String>();
+		
+		for(int i=0;i<k;i++){
+			for(int n=0;n<all_nodes.size();n++){
+				boolean in_S = false;
+				for(int y=0;y<S.size();y++){
+					if(S.get(y).equals(all_nodes.get(n))){
+						in_S = true;
+					}
+				}
+
+				if(in_S == false){
+					V.clear();
+					V.addAll(S);
+					V.add(all_nodes.get(n));
+
+					boolean lessthan = false;
+					for(int m=0;m<all_nodes.size();m++){
+						U.clear();
+						in_S = false;
+						for(int z=0;z<S.size();z++){
+							if(S.get(z).equals(all_nodes.get(m))){
+								in_S = true;
+							}
+						}
+						if((n!=m)&&(in_S == false)){
+							U.addAll(S);
+							U.add(all_nodes.get(m));
+							if(influence(U)>influence(V)){
+								lessthan = true;
+							}
+						}
+					}
+
+					if(lessthan == false){
+						S.add(all_nodes.get(n));
+						break;
+					}
+				}
+			}
+		}
+
+		result.addAll(S);
+		return result;
+		
+		/*
+		ArrayList<String> result = new ArrayList<>();
 		ArrayList<SimpleEntry<String,Float>> allInf = new ArrayList<SimpleEntry<String,Float>>();
 		for(int i=0; i<graph.adjList.length; i++){
 			allInf.add(new SimpleEntry<String,Float>(graph.adjList[i].get(0),influence(graph.adjList[i].get(0))));
@@ -300,6 +360,7 @@ public class NetworkInfluence
 			allInf.remove(indexToRemove);
 		}
 		return result;
+		*/
 	}
 	
 	//Delete this later
