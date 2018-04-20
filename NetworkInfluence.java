@@ -1,4 +1,4 @@
-/*
+/**
  * @author Dustin Welu, Joseph Trom, Thomas Haddy
  */
 

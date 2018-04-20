@@ -1,11 +1,11 @@
+/**
+ * @author Dustin Welu, Joseph Trom, Thomas Haddy 
+ */
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-
-/*
- * @author Dustin Welu, Joseph Trom, Thomas Haddy 
- */
 
 public class WikiCrawler {
 	
